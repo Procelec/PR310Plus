@@ -34,7 +34,7 @@ else ifeq ($(FLASH_TYPE), emmc)
 	include configs/$(CHIP)/script_emmc.mk
 else
 	# for spinand or spinand-ramdisk
-	include configs/$(CHIP)/script_nand.mk
+	include configs/$(CHIP)/script_nand_pr310plus.mk
 endif
 
 ifeq ($(FLASH_TYPE), spinand-ramdisk)
@@ -44,7 +44,7 @@ endif
 ifeq ($(BOOT_TYPE), fastboot)
 	include configs/$(CHIP)/rootfs_fastboot.mk
 else
-	include configs/$(CHIP)/rootfs.mk
+	include configs/$(CHIP)/rootfs_pr310plus.mk
 endif
 -include configs/$(CHIP)/rootfs_recovery.mk
 include image.mk

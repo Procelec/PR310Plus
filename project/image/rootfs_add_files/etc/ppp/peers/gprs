@@ -1,0 +1,80 @@
+# /etc/ppp/peers/gprs
+
+# Usage: root>pppd call gprs
+# Interface should be used is the interface which connects physics interface of SIM7100C Module
+
+# if the ttyname serial port does not start with "/", automatically add "/dev/"
+/dev/ttyACM4
+
+# speed Serial port baud
+115200
+
+# hardware stream control
+crtscts
+
+# modem mode
+modem
+
+# no authentication
+noauth
+
+# refuse chap authorization
+refuse-chap
+
+# refuse mschap authorization
+refuse-mschap
+
+# refuse mschap-v2 authorization
+refuse-mschap-v2
+
+# debug mode 
+# pppd will record the content of all control packets sent or received in a readable form
+debug
+
+# foreground running
+nodetach
+
+#hide-password
+
+# request 2 dns server addresses from ISP,  two of which will named as environment variables DNS1 and DNS2 and be transferred to /etc/ppp/ip-up script, and set environment variable USEPERDNS to 1.
+usepeerdns
+
+# ip is provided by ISP, disable the local ip
+noipdefault
+
+# add ISP gateway to the routing table as the default route
+defaultroute
+
+# username
+user "cmnet"
+
+0.0.0.0:0.0.0.0
+
+#ipcp-accept-local
+
+#ipcp-accept-remote
+
+# Enable the following two options to realize automatic replay of ppp disconnection
+
+# lcp connection failure times
+lcp-echo-failure 6
+
+# lcp echo sending interval
+lcp-echo-interval 10
+
+# disable ccp
+#noccp
+
+# disable tcp/ip header in Van Jacobson format
+#novj
+
+#novjccomp
+
+# reconnect instead of exit after each connection, the repeated connection times are limited by maxfail
+persist
+
+# maximum repeated connection times连接最大尝试次数，0无限制
+#maxfail
+
+# hardware dial before enable ppp
+connect "/usr/sbin/chat -s -v -f /etc/ppp/gprs-connect-chat"

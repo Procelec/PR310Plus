@@ -32,7 +32,7 @@ refuse-mschap-v2
 debug
 
 # foreground running
-nodetach
+#nodetach
 
 #hide-password
 

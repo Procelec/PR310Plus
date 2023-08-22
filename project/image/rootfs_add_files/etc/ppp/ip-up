@@ -1,0 +1,4 @@
+#!/bin/sh
+#ip-up
+
+ip route add 192.168.95.98 dev ppp0

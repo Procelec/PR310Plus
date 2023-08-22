@@ -95,10 +95,20 @@ root:
 	fi;
 	cd $(OUTPUTDIR)/rootfs/etc/;ln -sf fw_printenv fw_setenv
 	echo mkdir -p /var/lock >> ${OUTPUTDIR}/rootfs/etc/init.d/rcS
-	if [ "$(FPGA)" = "1" ]; then \
-		echo mount -t jffs2 /dev/mtdblock1 /config >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS ; \
-	fi;
 	echo -e $(foreach block, $(USR_MOUNT_BLOCKS), "mount -t $($(block)$(FSTYPE)) $($(block)$(MOUNTPT)) $($(block)$(MOUNTTG))\n") >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS
+
+	#	GPIOs
+	echo "" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	echo "echo 13 > /sys/class/gpio/export" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	echo "echo out > /sys/class/gpio/gpio13/direction" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	echo "echo 1 > /sys/class/gpio/gpio13/value" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	# echo "echo 14 > /sys/class/gpio/export" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	# echo "echo out > /sys/class/gpio/gpio14/direction" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	# echo "echo 1 > /sys/class/gpio/gpio14/value" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	echo "echo 86 > /sys/class/gpio/export" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	echo "echo out > /sys/class/gpio/gpio86/direction" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	echo "echo 1 > /sys/class/gpio/gpio86/value" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
+	echo "" >> $(OUTPUTDIR)/rootfs/etc/init.d/rcS; \
 
 	chmod 755 $(LIB_DIR_PATH)/bin/debug/*
 	cp -rf $(LIB_DIR_PATH)/bin/debug/*  $(miservice$(RESOUCE))
@@ -136,25 +146,25 @@ root:
 		echo "#mi module" >> $(OUTPUTDIR)/customer/pr310_init.sh; \
 	fi;
 
-	if [ "$(PROJECT)" = "2D07" ]; then \
-		cp ../../kernel/drivers/sstar/gpio_key_sample/gpio_led_heartbeat/gpio_led_heartbeat.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION);\
-		echo "insmod /config/modules/4.9.84/gpio_led_heartbeat.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh; \
-	elif [ "$(PROJECT)" = "2D06" ]; then \
-		cp ../../kernel/drivers/sstar/gpio_key_sample/gpio_led_heartbeat_2D06/gpio_led_heartbeat.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION);\
-		echo "insmod /config/modules/4.9.84/gpio_led_heartbeat.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh; \
-	fi;
+	# if [ "$(PROJECT)" = "2D07" ]; then \
+	# 	cp ../../kernel/drivers/sstar/gpio_key_sample/gpio_led_heartbeat/gpio_led_heartbeat.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION);\
+	# 	echo "insmod /config/modules/4.9.84/gpio_led_heartbeat.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh; \
+	# elif [ "$(PROJECT)" = "2D06" ]; then \
+	# 	cp ../../kernel/drivers/sstar/gpio_key_sample/gpio_led_heartbeat_2D06/gpio_led_heartbeat.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION);\
+	# 	echo "insmod /config/modules/4.9.84/gpio_led_heartbeat.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh; \
+	# fi;
 
-	# for alsa
-	# 1.copy ko
-	cp $(PROJ_ROOT)/../kernel/modules/soundcore.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
-	cp $(PROJ_ROOT)/../kernel/modules/snd.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
-	cp $(PROJ_ROOT)/../kernel/modules/snd-timer.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
-	cp $(PROJ_ROOT)/../kernel/modules/snd-pcm.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
-	# 2.insmod ko when boot finish
-	echo "insmod  /config/modules/4.9.84/soundcore.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
-	echo "insmod  /config/modules/4.9.84/snd.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
-	echo "insmod  /config/modules/4.9.84/snd-timer.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
-	echo "insmod  /config/modules/4.9.84/snd-pcm.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
+	# # for alsa
+	# # 1.copy ko
+	# cp $(PROJ_ROOT)/../kernel/modules/soundcore.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
+	# cp $(PROJ_ROOT)/../kernel/modules/snd.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
+	# cp $(PROJ_ROOT)/../kernel/modules/snd-timer.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
+	# cp $(PROJ_ROOT)/../kernel/modules/snd-pcm.ko $(miservice$(RESOUCE))/modules/$(KERNEL_VERSION)
+	# # 2.insmod ko when boot finish
+	# echo "insmod  /config/modules/4.9.84/soundcore.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
+	# echo "insmod  /config/modules/4.9.84/snd.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
+	# echo "insmod  /config/modules/4.9.84/snd-timer.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
+	# echo "insmod  /config/modules/4.9.84/snd-pcm.ko" >> $(OUTPUTDIR)/customer/pr310_init.sh
 
 	if [ -f "$(LIB_DIR_PATH)/modules/$(KERNEL_VERSION)/misc_mod_list_late" ]; then \
 		cat $(LIB_DIR_PATH)/modules/$(KERNEL_VERSION)/misc_mod_list_late | sed 's#\(.*\).ko#insmod /config/modules/$(KERNEL_VERSION)/\1.ko#' >> $(OUTPUTDIR)/customer/pr310_init.sh; \
@@ -244,7 +254,12 @@ root:
 	#echo "cd / & ./logo " >> $(OUTPUTDIR)/customer/pr310_init.sh
 	echo "cd / " >> $(OUTPUTDIR)/customer/pr310_init.sh
 	
-
+	sed -i '/mi_ai\.ko/ s/^/#/' $(OUTPUTDIR)/customer/pr310_init.sh
+	sed -i '/mi_ao\.ko/ s/^/#/' $(OUTPUTDIR)/customer/pr310_init.sh
+	sed -i '/mi_disp\.ko/ s/^/#/' $(OUTPUTDIR)/customer/pr310_init.sh
+	sed -i '/mi_panel\.ko/ s/^/#/' $(OUTPUTDIR)/customer/pr310_init.sh
+	sed -i '/mi_alsa\.ko/ s/^/#/' $(OUTPUTDIR)/customer/pr310_init.sh
+	sed -i '/fbdev\.ko/ s/^/#/' $(OUTPUTDIR)/customer/pr310_init.sh
 	
 	mkdir -p $(OUTPUTDIR)/vendor
 	mkdir -p $(OUTPUTDIR)/customer

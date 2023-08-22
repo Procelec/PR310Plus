@@ -143,13 +143,9 @@ ubi_$(FLASH_TYPE)_partition_script:
 ubi_$(FLASH_TYPE)_config_script:
 	@echo "# <- this is for comment / total file size must be less than 4KB" > $(SCRIPTDIR)/set_config
 	@echo setenv bootargs  $(rootfs$(BOOTENV)) $(kernel$(BOOTENV)) $(EXBOOTARGS) \$$\(mtdparts\) >> $(SCRIPTDIR)/set_config
-ifeq ($(PROJECT), 2D06)
-	@echo setenv bootcmd \' gpio output 4 1 \; gpio output 14 1 \; bootlogo 0 0 0 0 0\; $(wifi24mclkcmd)\; $(wifirstoffcmd)\; nand read.e $(KERNELBOOTADDR) KERNEL $(kernel$(PATSIZE))\;$(rootfs$(BOOTCMD)) $(wifirstoncmd)\; bootm $(KERNELBOOTADDR)\;nand read.e $(KERNELBOOTADDR) RECOVERY $(kernel$(PATSIZE))\; bootm $(KERNELBOOTADDR) >> $(SCRIPTDIR)/set_config
-else 
-	@echo setenv bootcmd \' gpio output 25 0\; gpio output 26 1\; gpio output 27 0\; gpio output 28 1\; bootlogo 0 0 0 0 0\; $(wifi24mclkcmd)\; $(wifirstoffcmd)\; nand read.e $(KERNELBOOTADDR) KERNEL $(kernel$(PATSIZE))\;$(rootfs$(BOOTCMD)) $(wifirstoncmd)\; bootm $(KERNELBOOTADDR)\;nand read.e $(KERNELBOOTADDR) RECOVERY $(kernel$(PATSIZE))\; bootm $(KERNELBOOTADDR) >> $(SCRIPTDIR)/set_config
+	@echo setenv bootcmd \' gpio output 25 1\; gpio output 26 1\; gpio output 27 1\; gpio output 28 1\; gpio output 31 1\; gpio output 32 1\; gpio output 33 1\; gpio output 34 1\; bootlogo 0 0 0 0 0\; $(wifi24mclkcmd)\; $(wifirstoffcmd)\; nand read.e $(KERNELBOOTADDR) KERNEL $(kernel$(PATSIZE))\;$(rootfs$(BOOTCMD)) $(wifirstoncmd)\; bootm $(KERNELBOOTADDR)\;nand read.e $(KERNELBOOTADDR) RECOVERY $(kernel$(PATSIZE))\; bootm $(KERNELBOOTADDR) >> $(SCRIPTDIR)/set_config
 	#@echo setenv bootcmd \' bootlogo 0 0 0 0 0\; $(wifi24mclkcmd)\; $(wifirstoffcmd)\; nand read.e $(KERNELBOOTADDR) KERNEL $(kernel$(PATSIZE))\;$(rootfs$(BOOTCMD)) $(wifirstoncmd)\; bootm $(KERNELBOOTADDR)\;nand read.e $(KERNELBOOTADDR) RECOVERY $(kernel$(PATSIZE))\; bootm $(KERNELBOOTADDR) >> $(SCRIPTDIR)/set_config
-endif
-	@echo setenv dispout $(DISP_OUT_NAME) >> $(SCRIPTDIR)/set_config
+	#@echo setenv dispout $(DISP_OUT_NAME) >> $(SCRIPTDIR)/set_config
 	@echo setenv sdautoupgrade 1 >> $(SCRIPTDIR)/set_config
 	@echo setenv usbautoupgrade 1 >> $(SCRIPTDIR)/set_config
 	@echo setenv upgradePort 1 >> $(SCRIPTDIR)/set_config

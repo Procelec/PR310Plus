@@ -16,7 +16,7 @@ OK      ATS0=0
 OK      ATE0V1
 
 # setup APN
-OK      AT+CGDCONT=1,"IP","procelec.claro.com.ec"
+OK      AT+CGDCONT=1,"IP","\T"
 
 # dial-up to turn on GPRS service, the number depends on mobile provider
 OK      ATD*99***1#

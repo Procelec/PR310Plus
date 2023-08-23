@@ -1,4 +1,15 @@
 #!/bin/sh
 #ip-up
+now=`date +%Y-%m-%d_%Hh%Mm%Ss`
+logfile=/var/log/ip-up.log
 
-ip route add 192.168.95.98 dev ppp0
+echo "$0 called at $now with following params:" >> $logfile
+echo "Interface name used by pppd (e.g. ppp0): $1" >> $logfile
+echo "tty device name: $2" >> $logfile
+echo "tty device speed: $3" >> $logfile
+echo "Local IP address for the interface: $4" >> $logfile
+echo "Remote IP address: $5" >> $logfile
+echo "The parameter specified by the 'ipparam' option to pppd: $6" >> $logfile
+
+# Add the server host  route to routing table on VPN interface
+/sbin/route add -host 192.168.95.98 dev $1 >> $logfile 2>&1

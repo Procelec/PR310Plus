@@ -1,0 +1,17 @@
+#!/bin/sh
+
+VID=$(echo $PRODUCT | awk -F/ '{print $1}')
+PID=$(echo $PRODUCT | awk -F/ '{print $2}')
+
+if [ "${ACTION}" = "add" ]; then
+	echo "${ACTION} ${VID} ${PID} ${PRODUCT} ${MDEV} ${DEVNAME}" >> /var/log/usb.txt
+
+	if [ "${VID}" = "1bc7" ]; then
+		/sbin/ifup ppp0		
+	fi
+fi
+
+if [ "${ACTION}" = "remove" ]; then
+	echo "${ACTION} ${ATTR} ${PRODUCT} ${MDEV} ${DEVNAME}" >> /var/log/usb.txt
+fi
+

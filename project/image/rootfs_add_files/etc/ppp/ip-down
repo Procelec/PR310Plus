@@ -2,4 +2,4 @@
 #ip-down
 #set -vx
 
-ip route del 192.168.95.98
+route del 192.168.95.98

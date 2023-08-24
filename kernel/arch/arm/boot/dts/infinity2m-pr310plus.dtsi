@@ -327,7 +327,7 @@
 
         spidev: spidev {
             compatible = "spidev";
-	    status = "ok";
+    	    status = "ok";
         };
 
         i2c0@0{
@@ -579,18 +579,18 @@
             status = "ok";
         };
 
-        core_voltage {
-            vid_width = <2>;
-            vid_gpios = <PAD_UART1_RX PAD_SAR_GPIO1>;
-            vid_voltages = <850 900 950 1000>;  //2b'00 2b'01 2b'10 2b'11
-        };
-/*
+        // core_voltage {
+        //     vid_width = <2>;
+        //     vid_gpios = <PAD_UART1_RX PAD_SAR_GPIO1>;
+        //     vid_voltages = <850 900 950 1000>;  //2b'00 2b'01 2b'10 2b'11
+        // };
+
         core_voltage {
             vid_width = <1>;
             vid_gpios = <PAD_SAR_GPIO1>;
             vid_voltages = <950 1000>;  //2b'00 2b'01
         };
-*/
+
         watchdog: watchdog {
             compatible = "sstar,infinity-wdt";
             reg = <0x1F006000 0x40>;

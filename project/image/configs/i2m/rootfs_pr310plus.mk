@@ -13,6 +13,7 @@ root:
 	# foe no login
 	sed -i 's/console\:\:respawn\:\/sbin\/getty -L  console 0 vt100 \# GENERIC_SERIAL/console::respawn:-\/bin\/sh/' $(OUTPUTDIR)/rootfs/etc/inittab
 	#tar xf busybox/$(BUSYBOX).tar.gz -C $(OUTPUTDIR)/rootfs
+	tar -xvf libgpiod/$(LIBGPIOD).tar.gz -C $(OUTPUTDIR)/rootfs
 	tar xf $(LIB_DIR_PATH)/package/$(LIBC).tar.gz -C $(OUTPUTDIR)/rootfs/lib
 	mkdir -p $(miservice$(RESOUCE))/lib
 	cp $(LIB_DIR_PATH)/mi_libs/dynamic/* $(miservice$(RESOUCE))/lib/
@@ -69,14 +70,16 @@ root:
 	echo mouse.* 0:0 0660 =input/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
 	echo event.* 0:0 0660 =input/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
 	# for alsa
-	echo pcm.* 0:0 0660 =snd/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
-	echo control.* 0:0 0660 =snd/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
-	echo timer 0:0 0660 =snd/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
-	echo '$$DEVNAME=bus/usb/([0-9]+)/([0-9]+) 0:0 0660 =bus/usb/%1/%2'>> ${OUTPUTDIR}/rootfs/etc/mdev.conf
+	#echo pcm.* 0:0 0660 =snd/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
+	#echo control.* 0:0 0660 =snd/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
+	#echo timer 0:0 0660 =snd/ >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
+	# for usb devs
+	echo '$$DEVNAME=bus/usb/([0-9]+)/([0-9]+) 0:0 0660 @/etc/hotplug/usb_devs' >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
 	echo sd[a-z][0-9]  0:0  660  @/etc/hotplug/udisk_insert >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
 	echo sd[a-z]       0:0  660  \$$/etc/hotplug/udisk_remove >> ${OUTPUTDIR}/rootfs/etc/mdev.conf 	
 	echo mmcblk[0-9]p[0-9]  0:0  660  @/etc/hotplug/sdcard_insert >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
 	echo mmcblk[0-9]        0:0  660   \$$/etc/hotplug/sdcard_remove >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
+	#echo '.* 0:0 660 @/etc/hotplug/test' >> ${OUTPUTDIR}/rootfs/etc/mdev.conf
 
 	echo export PATH=\$$PATH:/config >> ${OUTPUTDIR}/rootfs/etc/init.d/rcS
 	echo export TERMINFO=/config/terminfo >> ${OUTPUTDIR}/rootfs/etc/init.d/rcS

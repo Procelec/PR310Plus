@@ -252,7 +252,12 @@ root:
 	#	cp $(PROJ_ROOT)/board/ini/pq.ini $(OUTPUTDIR)/customer/; \
 	#	echo "echo /customer/pq.ini  0x148 > /sys/class/mstar/mdisp/pq" >> $(OUTPUTDIR)/customer/pr310_init.sh; \
 	#fi;
-	
+
+	#Start wifi
+	if [ $(interface_wlan) = "enable" ]; then \
+		echo "/config/wifi/ssw01bInit.sh" >> $(OUTPUTDIR)/customer/pr310_init.sh; \
+	fi;
+
 	#echo "echo 1 > /sys/class/mstar/mdisp/bootlogo" >> $(OUTPUTDIR)/customer/pr310_init.sh
 	#echo "cd / & ./logo " >> $(OUTPUTDIR)/customer/pr310_init.sh
 	echo "cd / " >> $(OUTPUTDIR)/customer/pr310_init.sh
